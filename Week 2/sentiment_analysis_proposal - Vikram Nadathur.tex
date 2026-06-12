@@ -1,0 +1,270 @@
+\documentclass[12pt, letterpaper]{article}
+
+% --- Packages ---
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{cite}
+
+% --- Color Definitions ---
+\definecolor{titleblue}{RGB}{30, 80, 160}
+\definecolor{sectiongray}{RGB}{50, 50, 50}
+
+% --- Hyperlink Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=titleblue,
+    urlcolor=titleblue,
+    citecolor=titleblue
+}
+
+% --- Header / Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{gray}{\small Sentiment Analysis -- Project Proposal}}
+\lhead{\textcolor{gray}{\small Python Programming Course}}
+\rfoot{\textcolor{gray}{\small Page \thepage}}
+
+% --- Section Formatting ---
+\titleformat{\section}{\large\bfseries\color{titleblue}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{sectiongray}}{}{0em}{}
+
+% --- Document ---
+\begin{document}
+
+% ========================
+%  TITLE PAGE
+% ========================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge \textbf{\textcolor{titleblue}{Project \#11 Proposal}}}\\[0.5cm]
+    {\LARGE Reddit \& Twitter Sentiment Analysis}\\[0.3cm]
+    {\large A Computational Social Science Study}
+
+    \vspace{1.5cm}
+    \rule{0.6\textwidth}{0.4pt}
+    \vspace{1.5cm}
+
+    {\large \textbf{Course:} Python Programming}\\[0.3cm]
+    {\large \textbf{Student:} Vikram}\\[0.3cm]
+    {\large \textbf{Date:} \today}
+
+    \vfill
+    \textcolor{gray}{\small Submitted as a project proposal for approval}
+\end{titlepage}
+
+% ========================
+%  TABLE OF CONTENTS
+% ========================
+\tableofcontents
+\newpage
+
+% ========================
+%  1. INTRODUCTION
+% ========================
+\section{Introduction}
+
+Social media platforms like Reddit and Twitter (now X) generate millions of posts daily, making them rich, real-time repositories of public opinion. Sentiment analysis---the computational study of emotional tone in text---offers a powerful lens for understanding how communities feel about events, brands, products, or social issues over time.
+
+This project proposes building a complete data pipeline in Python that collects social media data, performs sentiment analysis, and produces meaningful visualizations to uncover trends in public discourse.
+
+\vspace{0.5em}
+\noindent \textbf{Core Question:} \textit{How does public sentiment on a chosen topic (e.g., AI, mental health, climate) evolve over time across Reddit communities, and what linguistic patterns characterize positive vs. negative discourse?}
+
+% ========================
+%  2. DATA
+% ========================
+\section{Data Sources}
+
+\subsection{Primary Dataset}
+
+Two options will be evaluated; the final choice depends on API access at time of execution:
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Source} & \textbf{Access Method} & \textbf{Notes} \\
+\midrule
+Reddit & PRAW (Python Reddit API Wrapper) & Free, well-documented \\
+Twitter / X & Tweepy or Academic API & Rate-limited on free tier \\
+Kaggle Datasets & Direct CSV download & Pre-scraped, no API needed \\
+\bottomrule
+\end{tabular}
+\caption{Candidate data sources for the project}
+\end{table}
+
+\subsection{Preferred Approach}
+
+The project will use the \textbf{Reddit API via PRAW} as the primary source, targeting 2--3 subreddits on a single topic (e.g., \texttt{r/technology}, \texttt{r/artificialintelligence}, \texttt{r/MachineLearning}).
+
+A pre-scraped \textbf{Kaggle dataset} will serve as a backup if API limits are encountered.
+
+\subsection{Data Fields Collected}
+
+\begin{itemize}[noitemsep]
+    \item Post title and body text
+    \item Subreddit name
+    \item Post creation timestamp
+    \item Upvote score and ratio
+    \item Number of comments
+    \item Author name (anonymized for reporting)
+\end{itemize}
+
+\subsection{Estimated Volume}
+
+Approximately 5,000--15,000 posts will be collected, spanning a 6--12 month window to enable meaningful time-series analysis.
+
+% ========================
+%  3. ANALYSIS PLAN
+% ========================
+\section{Proposed Analysis}
+
+\subsection{Data Cleaning \& Preprocessing}
+
+\begin{enumerate}[noitemsep]
+    \item Remove deleted/removed posts and bot accounts
+    \item Strip URLs, special characters, and HTML entities
+    \item Tokenize and lowercase all text
+    \item Remove stopwords using \texttt{NLTK}
+    \item Apply lemmatization for word normalization
+\end{enumerate}
+
+\subsection{Sentiment Scoring}
+
+Sentiment will be assigned using two complementary methods:
+
+\begin{itemize}
+    \item \textbf{VADER} (\textit{Valence Aware Dictionary and sEntiment Reasoner}): A lexicon-based model well-suited for social media text. Outputs a compound score in $[-1, +1]$.
+    \item \textbf{TextBlob}: A simpler alternative providing polarity and subjectivity scores; useful for cross-validation.
+\end{itemize}
+
+Each post will be classified as \textit{Positive}, \textit{Neutral}, or \textit{Negative} based on the VADER compound score:
+\[
+\text{Label} =
+\begin{cases}
+\text{Positive} & \text{if } c \geq 0.05 \\
+\text{Negative} & \text{if } c \leq -0.05 \\
+\text{Neutral} & \text{otherwise}
+\end{cases}
+\]
+
+\subsection{Statistical Analyses}
+
+\begin{enumerate}
+    \item \textbf{Sentiment over time:} Compute weekly rolling averages of compound sentiment scores.
+    \item \textbf{Engagement vs.\ sentiment:} Pearson correlation between upvote score and sentiment polarity.
+    \item \textbf{Subreddit comparison:} ANOVA or Mann-Whitney U test to compare mean sentiment across subreddits.
+    \item \textbf{Top keywords by sentiment class:} TF-IDF to extract the most discriminating words per class.
+\end{enumerate}
+
+% ========================
+%  4. VISUALIZATION PLAN
+% ========================
+\section{Proposed Visualizations}
+
+All visualizations will be produced using \texttt{matplotlib}, \texttt{seaborn}, and \texttt{wordcloud} in Python.
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}p{3.5cm}p{4.5cm}p{5cm}@{}}
+\toprule
+\textbf{Chart Type} & \textbf{Variables} & \textbf{Purpose} \\
+\midrule
+Line Chart & Sentiment score vs.\ time & Show mood trends over weeks/months \\
+Bar Chart & Avg.\ sentiment by subreddit & Compare community tone \\
+Scatter Plot & Upvote score vs.\ sentiment & Explore engagement--emotion link \\
+Word Cloud & Top words per sentiment class & Visual summary of vocabulary \\
+Histogram & Distribution of compound scores & Understand score spread \\
+Heatmap & Sentiment by day-of-week \& hour & Temporal posting patterns \\
+\bottomrule
+\end{tabular}
+\caption{Planned visualizations and their analytical purpose}
+\end{table}
+
+% ========================
+%  5. TOOLS & LIBRARIES
+% ========================
+\section{Tools and Libraries}
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Data Collection:} \texttt{praw}, \texttt{requests}, \texttt{pandas}
+    \item \textbf{Text Processing:} \texttt{nltk}, \texttt{re}, \texttt{string}
+    \item \textbf{Sentiment Analysis:} \texttt{vaderSentiment}, \texttt{textblob}
+    \item \textbf{Visualization:} \texttt{matplotlib}, \texttt{seaborn}, \texttt{wordcloud}
+    \item \textbf{Statistics:} \texttt{scipy.stats}, \texttt{sklearn} (TF-IDF)
+    \item \textbf{Report:} \LaTeX{} (\texttt{pdflatex})
+\end{itemize}
+
+% ========================
+%  6. PROJECT TIMELINE
+% ========================
+\section{Project Timeline}
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Week} & \textbf{Task} & \textbf{Deliverable} \\
+\midrule
+Week 1 & Data collection \& cleaning & Clean CSV dataset \\
+Week 2 & Sentiment scoring \& EDA & Annotated DataFrame \\
+Week 3 & Statistical analysis & Analysis notebook \\
+Week 4 & Visualizations & Publication-ready figures \\
+Week 5 & LaTeX report writing & Final PDF report \\
+\bottomrule
+\end{tabular}
+\caption{Proposed five-week project schedule}
+\end{table}
+
+% ========================
+%  7. EXPECTED OUTCOMES
+% ========================
+\section{Expected Outcomes}
+
+Upon completion, this project will produce:
+
+\begin{enumerate}
+    \item A clean, reusable Python data pipeline for social media NLP tasks
+    \item A statistical analysis revealing sentiment trends and engagement patterns
+    \item Six or more original visualizations suitable for a research report
+    \item A full LaTeX report documenting methodology, findings, and conclusions
+\end{enumerate}
+
+The project will demonstrate proficiency in data collection, text preprocessing, applied NLP, statistical thinking, and scientific communication---core skills for data science and computational research roles.
+
+% ========================
+%  8. CONCLUSION
+% ========================
+\section{Conclusion}
+
+Reddit and Twitter offer an unparalleled window into real-time public sentiment. By applying Python-based NLP tools to a focused corpus of posts, this project will yield actionable insights into how communities discuss a topic of interest---and how emotional tone correlates with online engagement. The methods are scalable, reproducible, and directly applicable to real-world problems in social science, public health communication, and market research.
+
+% ========================
+%  REFERENCES
+% ========================
+\newpage
+\section*{References}
+
+\begin{enumerate}
+    \item Hutto, C.J. \& Gilbert, E. (2014). VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text. \textit{ICWSM}.
+    \item Bonta, V. \& Janardhan, N. (2019). A Comprehensive Study on Lexicon-Based Approaches for Sentiment Analysis. \textit{Asian Journal of Computer Science and Technology}.
+    \item Reddit API Documentation. \url{https://www.reddit.com/dev/api/}
+    \item PRAW Documentation. \url{https://praw.readthedocs.io/}
+    \item Kaggle Datasets Portal. \url{https://www.kaggle.com/datasets}
+\end{enumerate}
+
+\end{document}

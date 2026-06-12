@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mars Rover Photos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 960px;
+            margin: 30px auto;
+            padding: 0 20px;
+            background-color: #f4f4f4;
+        }
+        h1 { color: #333; }
+        form { margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, select { padding: 6px; margin-top: 4px; width: 200px; }
+        button {
+            margin-top: 14px;
+            padding: 8px 20px;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover { background-color: #a93226; }
+        .photos-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+        .photo {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            width: 220px;
+        }
+        .photo img { width: 200px; height: 200px; object-fit: cover; }
+        .photo p { margin: 4px 0; font-size: 13px; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Mars Rover Photos</h1>
+    <form method="POST">
+        <label for="sol">Martian Sol (Day):</label>
+        <input type="number" id="sol" name="sol" required placeholder="e.g. 10">
+
+        <label for="camera">Camera Type:</label>
+        <select id="camera" name="camera">
+            <option value="fhaz">FHAZ</option>
+            <option value="navcam">NAVCAM</option>
+            <option value="mast">MAST</option>
+            <option value="chemcam">CHEMCAM</option>
+            <option value="mahli">MAHLI</option>
+            <option value="mardi">MARDI</option>
+            <option value="rhaz">RHAZ</option>
+        </select>
+
+        <button type="submit">Fetch Photos</button>
+    </form>
+
+    <div class="photos-grid">
+        {% for photo in photos %}
+        <div class="photo">
+            <p><strong>ID:</strong> {{ photo[0] }}</p>
+            <p><strong>Date:</strong> {{ photo[1] }}</p>
+            <img src="data:image/jpeg;base64,{{ photo[2] }}" alt="Mars Rover Photo">
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

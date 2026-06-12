@@ -1,0 +1,88 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{headblue}{HTML}{1F4E79}
+\definecolor{rowblue}{HTML}{2E75B6}
+\definecolor{altrow}{HTML}{F2F7FB}
+
+\titleformat{\section}{\large\bfseries\color{headblue}}{}{0em}{}
+\titlespacing{\section}{0pt}{12pt}{4pt}
+\setlist[enumerate]{leftmargin=1.4em,itemsep=2pt,topsep=2pt}
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=2pt}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushleft}
+{\Huge\bfseries\color{headblue} Project Proposal:\\[2pt] Full-Stack To-Do List Web Application}\\[4pt]
+{\itshape\color{gray} Python Programming --- Course Project}
+\end{flushleft}
+\vspace{2pt}
+{\color{rowblue}\hrule height 1.5pt}
+\vspace{8pt}
+
+\section{Introduction}
+For my Python Programming project I will build and deploy a full-stack to-do list website using the Django web framework. The application will let a user register an account, log in, and create, view, update, and delete their own tasks, with each user only able to see their own list. I am basing the project on a nine-part video series (``Django Fullstack Todolist Website'' by THE PROTON GUY) that walks through the build from setup to deployment. A to-do list is a great first project because the core idea is simple and familiar, but completing it still requires me to practice the fundamentals of Python and apply them to a real, working program rather than isolated exercises. By the end I will have a live website I can share, along with hands-on experience in how a real web application is structured.
+
+\section{Plan of Action}
+I will follow the playlist in order, treating each video as a milestone and testing my code after every step before moving on:
+\begin{enumerate}
+  \item Set up the project: install Python and Django, create a virtual environment, start the Django project and app, and run the development server to confirm it works.
+  \item Build the templates and views: create the base HTML pages and connect them to Django views and URLs so the site renders in the browser.
+  \item Add user authentication: build register, login, and logout functionality so each person has their own account.
+  \item Create tasks: design the Task model and a form so a logged-in user can add new to-do items to the database.
+  \item Display tasks: query the database and show each user's task list on the page.
+  \item Update and delete tasks: add the ability to mark a task complete and remove tasks from the list.
+  \item Restrict access: make sure users can only see and edit their own tasks, not anyone else's.
+  \item Deploy the website: push the finished project online so it is accessible as a live link, then do final testing and write up my documentation.
+\end{enumerate}
+
+\section{Technologies Used}
+\begin{itemize}
+  \item \textbf{Python:} The core programming language for all of the application logic.
+  \item \textbf{Django:} A Python web framework that handles URLs, views, forms, the database, and user authentication.
+  \item \textbf{SQLite:} The lightweight database (built into Django) that stores user accounts and tasks.
+  \item \textbf{HTML \& CSS:} Used to build and style the web pages the user sees and interacts with.
+  \item \textbf{Git \& GitHub:} For version control and backing up my code as I follow each step.
+  \item \textbf{Hosting platform:} A deployment service to publish the finished site online as a live, shareable link.
+\end{itemize}
+
+\section{Timeline}
+As a summer project, I plan to complete the build in 10 days, working on it intensively each day:
+
+\vspace{6pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{1.3cm} Y p{4.7cm}}
+\rowcolor{rowblue}
+\textcolor{white}{\textbf{Day}} & \textcolor{white}{\textbf{Focus}} & \textcolor{white}{\textbf{Deliverable}} \\
+Day 1 & Install Python and Django, set up the project and virtual environment & Running Django development server \\
+\rowcolor{altrow}
+Day 2 & Build templates, views, and URLs & Base pages render in the browser \\
+Day 3 & Add user authentication --- register and login & Users can create an account and log in \\
+\rowcolor{altrow}
+Day 4 & Finish authentication --- logout and session handling & Complete account system \\
+Day 5 & Create the Task model and add-task form & Logged-in users can add tasks \\
+\rowcolor{altrow}
+Day 6 & Display each user's task list from the database & Tasks show on the page \\
+Day 7 & Update and delete tasks (mark complete, remove) & Full task management features \\
+\rowcolor{altrow}
+Day 8 & Restrict tasks so users only see their own; styling & Secure, styled application \\
+Day 9 & Testing and bug fixes & Polished, tested application \\
+\rowcolor{altrow}
+Day 10 & Deploy online and write documentation & Live website + final write-up \\
+\end{tabularx}
+
+\end{document}
