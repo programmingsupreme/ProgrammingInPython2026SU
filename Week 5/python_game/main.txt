@@ -1,0 +1,237 @@
+import pygame
+import random
+import os
+
+# Initialize Pygame
+pygame.init()
+
+# Screen dimensions
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+# Get the absolute path of the current directory
+base_path = os.path.dirname(os.path.abspath(__file__))
+
+class Game:
+    def __init__(self):
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption("Python Game in Python")
+        self.clock = pygame.time.Clock()
+        self.snake = Snake()
+        self.fruits = []
+        self.spawn_fruits()
+        self.obstacles = [Obstacle() for _ in range(3)]  # CHANGED (Task 7): create 3 static obstacles placed randomly
+        self.score = 0
+        self.high_score = self.load_high_score()  # CHANGED (Task 6): load the saved high score when the game starts
+        # CHANGED (Task 5): load several backgrounds into a list so the player can cycle through them.
+        # Add as many background image files to the images folder as you like and list them here.
+        self.background_files = ['images/background.jpg', 'images/background2.jpeg']  # CHANGED (Task 5): list of background image paths
+        self.backgrounds = []  # CHANGED (Task 5): will hold the loaded/scaled background surfaces
+        for bg_file in self.background_files:  # CHANGED (Task 5): load and prepare each background once at startup
+            bg = pygame.image.load(os.path.join(base_path, bg_file)).convert_alpha()  # CHANGED (Task 5)
+            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))  # CHANGED (Task 5)
+            bg.set_alpha(128)  # CHANGED (Task 5): keep the same opacity as before
+            self.backgrounds.append(bg)  # CHANGED (Task 5)
+        self.bg_index = 0  # CHANGED (Task 5): index of the currently displayed background
+        self.background = self.backgrounds[self.bg_index]  # CHANGED (Task 5): current background surface
+        self.eat_sound = pygame.mixer.Sound(os.path.join(base_path, 'sounds/eat.wav'))
+        self.explode_sound = pygame.mixer.Sound(os.path.join(base_path, 'sounds/explosion.wav'))
+        self.wall_sound = pygame.mixer.Sound(os.path.join(base_path, 'sounds/wall.wav'))
+        self.plum_sound = pygame.mixer.Sound(os.path.join(base_path, 'sounds/new.wav'))  # CHANGED (Task 4): load the new plum-eating sound (place new.wav in the sounds folder)
+
+    def spawn_fruits(self):
+        # CHANGED (Task 3): list only spawnable fruits (Bomb is added separately below).
+        # The old code used fruit_classes[:-1] which sliced off Plum, so Plum never spawned.
+        spawnable_fruits = [Apple, Orange, Plum]  # CHANGED (Task 3): added Plum to the spawnable pool
+        # Ensure at least one bomb is generated
+        self.fruits = [Bomb()]
+        self.fruits += [random.choice(spawnable_fruits)() for _ in range(2)]  # CHANGED (Task 3): pick from spawnable_fruits (now includes Plum)
+
+    def run(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_b:  # CHANGED (Task 5): press B to cycle to the next background
+                        self.bg_index = (self.bg_index + 1) % len(self.backgrounds)  # CHANGED (Task 5): advance index, wrapping around
+                        self.background = self.backgrounds[self.bg_index]  # CHANGED (Task 5): switch the active background
+                    else:  # CHANGED (Task 5): any other key is treated as a direction change as before
+                        self.snake.change_direction(event.key)
+            
+            self.snake.move()
+            for fruit in self.fruits:
+                if self.snake.check_collision(fruit.position):
+                    if isinstance(fruit, Bomb):
+                        self.explode_sound.play()
+                        running = False
+                    else:
+                        if isinstance(fruit, Plum):       # CHANGED (Task 4): detect when the eaten fruit is a Plum
+                            self.plum_sound.play()        # CHANGED (Task 4): play the special plum sound for plums
+                        else:                             # CHANGED (Task 4): all other fruits use the normal eat sound
+                            self.eat_sound.play()
+                        self.score += fruit.points
+                        if self.score > self.high_score:  # CHANGED (Task 6): keep the high score updated during play
+                            self.high_score = self.score  # CHANGED (Task 6)
+                        self.snake.grow()
+                        fruit.reposition()
+
+            if self.snake.check_wall_collision(SCREEN_WIDTH, SCREEN_HEIGHT):
+                print("Snake hit the wall!")
+                self.wall_sound.play()
+                running = False
+
+            for obstacle in self.obstacles:  # CHANGED (Task 7): end the game if the snake's head hits any obstacle
+                if self.snake.check_collision(obstacle.position):  # CHANGED (Task 7): reuse the snake's head-collision check
+                    print("Snake hit an obstacle!")  # CHANGED (Task 7)
+                    self.explode_sound.play()  # CHANGED (Task 7): reuse the explosion sound for the crash
+                    running = False  # CHANGED (Task 7)
+
+            self.screen.fill(WHITE)
+            self.screen.blit(self.background, (0, 0))
+            self.draw_walls()
+            for obstacle in self.obstacles:  # CHANGED (Task 7): draw all obstacles each frame
+                obstacle.draw(self.screen)  # CHANGED (Task 7)
+            self.snake.draw(self.screen)
+            for fruit in self.fruits:
+                fruit.draw(self.screen)
+
+            self.display_score()
+            pygame.display.update()
+            self.clock.tick(10)
+
+        self.save_high_score()  # CHANGED (Task 6): persist the high score to file before quitting
+        pygame.quit()
+
+    def draw_walls(self):
+        pygame.draw.rect(self.screen, BLACK, (0, 0, SCREEN_WIDTH, 10))
+        pygame.draw.rect(self.screen, BLACK, (0, 0, 10, SCREEN_HEIGHT))
+        pygame.draw.rect(self.screen, BLACK, (0, SCREEN_HEIGHT-10, SCREEN_WIDTH, 10))
+        pygame.draw.rect(self.screen, BLACK, (SCREEN_WIDTH-10, 0, 10, SCREEN_HEIGHT))
+
+    # CHANGED (Task 6): read the saved high score from highscore.txt; return 0 if the file is missing or invalid
+    def load_high_score(self):  # CHANGED (Task 6)
+        high_score_path = os.path.join(base_path, 'highscore.txt')  # CHANGED (Task 6)
+        try:  # CHANGED (Task 6)
+            with open(high_score_path, 'r') as f:  # CHANGED (Task 6)
+                return int(f.read().strip())  # CHANGED (Task 6)
+        except (FileNotFoundError, ValueError):  # CHANGED (Task 6): no file yet or bad contents
+            return 0  # CHANGED (Task 6)
+
+    # CHANGED (Task 6): write the current high score back to highscore.txt
+    def save_high_score(self):  # CHANGED (Task 6)
+        high_score_path = os.path.join(base_path, 'highscore.txt')  # CHANGED (Task 6)
+        with open(high_score_path, 'w') as f:  # CHANGED (Task 6)
+            f.write(str(self.high_score))  # CHANGED (Task 6)
+
+    def display_score(self):
+        font = pygame.font.SysFont(None, 35)
+        score_text = font.render(f"Score: {self.score}", True, BLACK)
+        self.screen.blit(score_text, [20, 20])
+        high_text = font.render(f"High Score: {self.high_score}", True, BLACK)  # CHANGED (Task 6): render the high score
+        self.screen.blit(high_text, [20, 50])  # CHANGED (Task 6): draw it just below the current score
+
+class Snake:
+    def __init__(self):
+        self.size = 20
+        self.body = [(100, 100)]
+        self.direction = pygame.K_RIGHT
+        self.head_image = pygame.image.load(os.path.join(base_path, 'images/head.png'))
+        self.head_image = pygame.transform.scale(self.head_image, (self.size, self.size))
+        self.body_image = pygame.image.load(os.path.join(base_path, 'images/snake_part.png'))
+        self.body_image = pygame.transform.scale(self.body_image, (self.size, self.size))
+
+    def change_direction(self, key):
+        if key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
+            self.direction = key
+
+    def move(self):
+        x, y = self.body[0]
+        if self.direction == pygame.K_LEFT:
+            x -= self.size
+        elif self.direction == pygame.K_RIGHT:
+            x += self.size
+        elif self.direction == pygame.K_UP:
+            y -= self.size
+        elif self.direction == pygame.K_DOWN:
+            y += self.size
+        self.body.insert(0, (x, y))
+        self.body.pop()
+
+    def grow(self):
+        self.body.append(self.body[-1])
+
+    def check_collision(self, position):
+        return self.body[0] == position
+
+    def check_wall_collision(self, screen_width, screen_height):
+        x, y = self.body[0]
+        collision = x < 10 or x >= screen_width - 10 or y < 10 or y >= screen_height - 10
+        if collision:
+            print(f"Collision detected at x: {x}, y: {y}")
+        return collision
+
+    def draw(self, screen):
+        for i, segment in enumerate(self.body):
+            if i == 0:
+                screen.blit(self.head_image, segment)
+            else:
+                screen.blit(self.body_image, segment)
+
+class Fruit:
+    def __init__(self, image_path, points):
+        self.size = 20
+        self.image = pygame.image.load(os.path.join(base_path, image_path))
+        self.image = pygame.transform.scale(self.image, (self.size, self.size))
+        self.position = self.random_position()
+        self.points = points
+
+    def random_position(self):
+        x = random.randint(1, (SCREEN_WIDTH - self.size - 10) // self.size) * self.size
+        y = random.randint(1, (SCREEN_HEIGHT - self.size - 10) // self.size) * self.size
+        return (x, y)
+
+    def reposition(self):
+        self.position = self.random_position()
+
+    def draw(self, screen):
+        screen.blit(self.image, self.position)
+
+class Apple(Fruit):
+    def __init__(self):
+        super().__init__('images/apple.jpg', 10)
+
+class Orange(Fruit):
+    def __init__(self):
+        super().__init__('images/orange.jpg', 20)
+
+class Bomb(Fruit):
+    def __init__(self):
+        super().__init__('images/bomb.jpg', 0)
+
+class Plum(Fruit):
+    def __init__(self):
+        super().__init__('images/plum.jpg', 15)
+
+# CHANGED (Task 7): static obstacle the snake must avoid. Drawn as a solid grey block aligned to the grid.
+class Obstacle:  # CHANGED (Task 7)
+    def __init__(self):  # CHANGED (Task 7)
+        self.size = 20  # CHANGED (Task 7): match the snake/grid cell size
+        self.position = self.random_position()  # CHANGED (Task 7)
+
+    def random_position(self):  # CHANGED (Task 7): pick a grid-aligned spot inside the walls
+        x = random.randint(1, (SCREEN_WIDTH - self.size - 10) // self.size) * self.size  # CHANGED (Task 7)
+        y = random.randint(1, (SCREEN_HEIGHT - self.size - 10) // self.size) * self.size  # CHANGED (Task 7)
+        return (x, y)  # CHANGED (Task 7)
+
+    def draw(self, screen):  # CHANGED (Task 7): draw the obstacle as a grey square
+        pygame.draw.rect(screen, (128, 128, 128), (*self.position, self.size, self.size))  # CHANGED (Task 7)
+
+if __name__ == "__main__":
+    game = Game()
+    game.run()
