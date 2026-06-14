@@ -29,7 +29,8 @@ import pandas as pd
 import numpy as np
 import os
 
-DATA_DIR = "data"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(SCRIPT_DIR, "data")
 frames = []
 
 def safe_read(path):
@@ -172,7 +173,7 @@ if n_missing > 0:
     )
     combined.loc[missing_dates, "date"] = random_dates
 
-combined.to_csv("social_media_data.csv", index=False)
+combined.to_csv(os.path.join(SCRIPT_DIR, "social_media_data.csv"), index=False)
 print(f"\nSaved combined dataset: {len(combined)} rows -> social_media_data.csv")
 print(combined["platform"].value_counts())
 print(combined["source"].value_counts())

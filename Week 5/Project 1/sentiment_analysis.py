@@ -17,14 +17,15 @@ from scipy import stats
 import warnings, re, os
 warnings.filterwarnings('ignore')
 
-os.makedirs('figures', exist_ok=True)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+os.makedirs(os.path.join(SCRIPT_DIR, 'figures'), exist_ok=True)
 
 # ── 1. LOAD DATA ───────────────────────────────────────────
 # Replace with actual Kaggle dataset path:
 # df = pd.read_csv('your_kaggle_dataset.csv')
 # Required columns: text, platform, source, date, score
 
-df = pd.read_csv('social_media_data.csv', parse_dates=['date'])
+df = pd.read_csv(os.path.join(SCRIPT_DIR, 'social_media_data.csv'), parse_dates=['date'])
 print(f"Loaded {len(df)} records\n")
 
 # ── 2. PREPROCESSING ───────────────────────────────────────
