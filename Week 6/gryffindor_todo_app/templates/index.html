@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="ui center aligned header page-title">To-Do List</h1>
+
+<form class="ui form add-form" action="{{ url_for('add') }}" method="POST">
+    <div class="add-row">
+        <input type="text" name="title" placeholder="Enter a new task..." required>
+        <button class="ui button add-button" type="submit">Add</button>
+    </div>
+</form>
+
+<ul class="todo-list">
+    {% for todo in todo_list %}
+    <li class="{{ 'done' if todo.complete else '' }}">
+        <span class="todo-title">{{ todo.title }}</span>
+        <span class="todo-actions">
+            <a class="action update" href="{{ url_for('update', todo_id=todo.id) }}">
+                {{ 'Undo' if todo.complete else 'Done' }}
+            </a>
+            <a class="action delete" href="{{ url_for('delete', todo_id=todo.id) }}">Delete</a>
+        </span>
+    </li>
+    {% else %}
+    <li class="empty">No tasks yet &mdash; add one above.</li>
+    {% endfor %}
+</ul>
+
+{% if todo_list %}
+<div class="center">
+    <a href="{{ url_for('clear') }}" class="clear-button">Clear All</a>
+</div>
+{% endif %}
+{% endblock %}

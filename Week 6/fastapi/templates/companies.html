@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="ui header">Companies</h1>
+
+<h2>Add a Company</h2>
+<form class="ui form" action="{{ url_for('add_company') }}" method="post">
+    <div class="field">
+        <label>Company Name</label>
+        <input type="text" name="company_name" placeholder="Enter company name...">
+    </div>
+    <div class="field">
+        <label>Sector</label>
+        <input type="text" name="sector" placeholder="Enter sector...">
+    </div>
+    <button class="ui button" type="submit">Add Company</button>
+</form>
+
+<h2>Company List</h2>
+<div class="ui divided list">
+    {% for company in company_list %}
+    <div class="item">
+        <div class="content">
+            <div class="header">{{ company.name }}</div>
+            <p>Sector: {{ company.sector }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

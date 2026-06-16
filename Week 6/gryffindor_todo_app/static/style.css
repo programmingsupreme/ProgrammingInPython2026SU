@@ -1,0 +1,173 @@
+/* Gryffindor theme: scarlet (#7f0909) and gold (#d3a625) */
+
+body {
+    font-family: 'Georgia', 'Arial', serif;
+    background-color: #fff7e6;
+    color: #3a1d0c;
+    margin: 0;
+    padding: 0;
+}
+
+/* ---- Navbar ---- */
+.navbar {
+    background-color: #7f0909;
+    padding: 14px 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    border-bottom: 3px solid #d3a625;
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-brand {
+    color: #d3a625;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-nav .nav-item {
+    display: inline;
+}
+
+.navbar-nav .nav-link {
+    color: #d3a625;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link:hover {
+    text-decoration: underline;
+}
+
+/* ---- Layout ---- */
+.main-container {
+    max-width: 620px !important;
+    margin: 36px auto !important;
+    background-color: #ffffff;
+    padding: 28px 32px 36px;
+    border-radius: 8px;
+    box-shadow: 0 0 14px rgba(127, 9, 9, 0.15);
+    border-top: 5px solid #d3a625;
+}
+
+.page-title {
+    color: #7f0909 !important;
+    font-size: 34px !important;
+    margin-bottom: 24px !important;
+}
+
+/* ---- Add form ---- */
+.add-row {
+    display: flex;
+    gap: 10px;
+}
+
+.add-form input[type="text"] {
+    flex: 1;
+    padding: 11px 12px;
+    font-size: 16px;
+    border: 2px solid #d3a625;
+    border-radius: 4px;
+    outline: none;
+}
+
+.add-form input[type="text"]:focus {
+    border-color: #7f0909;
+}
+
+.add-button {
+    background-color: #7f0909 !important;
+    color: #d3a625 !important;
+    font-size: 16px !important;
+    padding: 11px 24px !important;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #d3a625 !important;
+    color: #7f0909 !important;
+}
+
+/* ---- Todo list ---- */
+.todo-list {
+    list-style: none;
+    padding: 0;
+    margin: 26px 0 0;
+}
+
+.todo-list li {
+    background-color: #fcf6e8;
+    padding: 13px 16px;
+    margin: 9px 0;
+    border-radius: 4px;
+    border-left: 4px solid #7f0909;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-list li.done .todo-title {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.todo-list li.done {
+    border-left-color: #d3a625;
+    opacity: 0.85;
+}
+
+.todo-list li.empty {
+    justify-content: center;
+    color: #888;
+    font-style: italic;
+    border-left-color: #d3a625;
+}
+
+.todo-title {
+    font-size: 17px;
+}
+
+.todo-actions .action {
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 14px;
+    font-size: 14px;
+}
+
+.action.update { color: #b8860b; }
+.action.delete { color: #7f0909; }
+.action:hover { text-decoration: underline; }
+
+/* ---- Clear all ---- */
+.center {
+    text-align: center;
+    margin-top: 22px;
+}
+
+.clear-button {
+    display: inline-block;
+    color: #7f0909;
+    border: 2px solid #7f0909;
+    padding: 8px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.clear-button:hover {
+    background-color: #7f0909;
+    color: #d3a625;
+}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="ui header">NASDAQ Stock Registration</h1>
+
+<h2>Register a Stock Position</h2>
+<form class="ui form" action="{{ url_for('register') }}" method="post">
+    <div class="field">
+        <label>Investor Name</label>
+        <input type="text" name="investor_name" placeholder="Enter your name...">
+    </div>
+    <div class="field">
+        <label>Shares Owned</label>
+        <input type="number" name="shares_owned" min="1" placeholder="Enter number of shares...">
+    </div>
+    <div class="field">
+        <label>Stock</label>
+        <select name="stock_id">
+            {% for stock in stock_list %}
+                <option value="{{ stock.id }}">{{ stock.ticker }} - {{ stock.company.name }} (${{ "%.2f"|format(stock.price) }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="ui blue button" type="submit">Register</button>
+</form>
+
+<h2>Registered Positions</h2>
+<div class="ui divided list">
+    {% for registration in registration_list %}
+        <div class="item">
+            <div class="content">
+                <div class="header">{{ registration.investor_name }} - {{ registration.shares_owned }} shares of {{ registration.stock.ticker }}</div>
+                <div class="description">
+                    {% if registration.is_active_position %}
+                    <span class="ui green label">Active</span>
+                    {% else %}
+                    <span class="ui grey label">Closed</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

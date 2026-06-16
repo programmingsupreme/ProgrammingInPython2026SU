@@ -1,0 +1,15 @@
+# FastAPI Activity Summary
+
+## How I made it stock-based
+
+Starting from the course's basic Todo app (FastAPI + SQLAlchemy + Jinja2), I extended it into a NASDAQ stock registration system instead of the student/course registration example shown in the PDF. I replaced the `Student`, `Course`, and `Registration` models with three new ones: `Company` (name, sector), `Stock` (ticker symbol, price, linked to a company), and `Registration` (investor name, shares owned, linked to a stock). The app seeds itself with five real NASDAQ companies and tickers (Apple/AAPL, Microsoft/MSFT, NVIDIA/NVDA, Tesla/TSLA, Amazon/AMZN). The site nav and pages were renamed from Courses/Faculty to Stocks/Companies, and the Registration page now lets an "investor" register a number of shares against a stock. The original Todo list feature was left untouched.
+
+## Were LLMs helpful?
+
+Following the PDF's "Improve with Gemini" example, I asked **Gemini** to convert the Todo app into the stock registration system. It got the data model right — Company/Stock/Registration was its idea — but the implementation broke: it deleted the `Todo` class from `models.py` without updating the rest of the app, so the server crashed with a 500 error.
+
+I used **Claude** to debug and finish the job. It traced the crash back to the mismatch, restored the `Todo` model, rewrote the FastAPI routes and Jinja2 templates to match the new stock models, and resolved a database schema conflict so my existing data wasn't lost. Claude also fixed two earlier setup issues: a venv activation path mistake and a separate 500 error caused by a breaking change in a newer version of Starlette.
+
+I did not use **ChatGPT** for this activity.
+
+**Takeaway:** Gemini was useful for brainstorming the data model but left the app in a broken state. Claude was the most helpful overall — it handled setup troubleshooting, root-cause debugging, and the full stock-registration build-out, leaving a working app at the end.

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="ui header">NASDAQ Stock Registration Ledger</h1>
+
+<!-- Form to Register a New Stock Position -->
+<form class="ui form" action="{{ url_for('add') }}" method="post">
+    <div class="field">
+        <label>Stock Ticker Symbol</label>
+        <input type="text" name="title" placeholder="Enter Ticker (e.g., NVDA)..." required>
+    </div>
+    <button class="ui blue button" type="submit">Register Asset</button>
+</form>
+
+<div class="ui divided list">
+    {% for todo in todo_list %}
+    <div class="item">
+        <!-- Action Buttons -->
+        <div class="right floated content">
+            <a class="ui button" href="{{ url_for('update', todo_id=todo.id) }}">Trade / Update</a>
+            <a class="ui red button" href="{{ url_for('delete', todo_id=todo.id) }}">Delist</a>
+        </div>
+        
+        <!-- Asset Details -->
+        <div class="content">
+            <div class="header" style="font-size: 1.2em; letter-spacing: 1px;">
+                {{ todo.title | upper }}
+            </div>
+            <div class="description" style="margin-top: 5px;">
+                {% if todo.complete %}
+                <span class="ui green label">Trading Active</span>
+                {% else %}
+                <span class="ui yellow label">Halted / Pending</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

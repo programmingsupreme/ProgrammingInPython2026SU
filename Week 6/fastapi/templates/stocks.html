@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="ui header">Stocks</h1>
+
+<h2>Add a Stock</h2>
+<form class="ui form" action="{{ url_for('add_stock') }}" method="post">
+    <div class="field">
+        <label>Ticker Symbol</label>
+        <input type="text" name="ticker" placeholder="e.g., AAPL">
+    </div>
+    <div class="field">
+        <label>Price</label>
+        <input type="number" step="0.01" name="price" placeholder="Enter price...">
+    </div>
+    <div class="field">
+        <label>Company</label>
+        <select name="company_id">
+            {% for company in company_list %}
+                <option value="{{ company.id }}">{{ company.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="ui button" type="submit">Add Stock</button>
+</form>
+
+<h2>Stock List</h2>
+<div class="ui divided list">
+    {% for stock in stock_list %}
+    <div class="item">
+        <div class="content">
+            <div class="header">{{ stock.ticker }} - {{ stock.company.name }}</div>
+            <p>Price: ${{ "%.2f"|format(stock.price) }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
