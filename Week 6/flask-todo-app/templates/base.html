@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>To-Do App</title>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">To-Do List</h1>
+
+            <!-- Add new item -->
+            <form action="/add" method="post">
+                <div class="field has-addons">
+                    <div class="control is-expanded">
+                        <input
+                            class="input"
+                            type="text"
+                            name="title"
+                            placeholder="Add a new to-do..."
+                            required
+                        />
+                    </div>
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Add</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Todo list -->
+            {% for todo in todo_list %}
+            <div class="box is-flex is-justify-content-space-between is-align-items-center">
+                <span
+                    class="{% if todo.complete %}has-text-grey-light{% endif %}"
+                    style="{% if todo.complete %}text-decoration: line-through;{% endif %}"
+                >
+                    {{ todo.id }} | {{ todo.title }}
+                </span>
+                <div class="buttons">
+                    <a href="/update/{{ todo.id }}"
+                       class="button is-small {% if todo.complete %}is-warning{% else %}is-success{% endif %}">
+                        {% if todo.complete %}Undo{% else %}Complete{% endif %}
+                    </a>
+                    <a href="/delete/{{ todo.id }}" class="button is-small is-danger">Delete</a>
+                </div>
+            </div>
+            {% else %}
+            <p class="has-text-centered has-text-grey mt-5">Nothing here yet — add your first to-do!</p>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+</html>

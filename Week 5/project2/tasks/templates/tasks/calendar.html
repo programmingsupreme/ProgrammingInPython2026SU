@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Calendar{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h1>Completed Tasks Calendar</h1>
+    </div>
+
+    {% if days %}
+        {% for day in days %}
+            <div class="group-section">
+                <div class="group-heading">
+                    <h2>{{ day.date|date:"l, F j, Y" }}</h2>
+                    <span class="group-count">{{ day.tasks|length }} completed</span>
+                </div>
+                <ul class="task-list">
+                    {% for task in day.tasks %}
+                        <li class="task-item complete">
+                            <span class="checkbox-btn" aria-hidden="true">&#9745;</span>
+                            <div class="task-body">
+                                <span class="task-title">{{ task.title }}</span>
+                                {% if task.description %}
+                                    <p class="task-description">{{ task.description }}</p>
+                                {% endif %}
+                                <span class="task-meta">
+                                    <span class="task-time">{{ task.completed_at|date:"g:i A" }}</span>
+                                    {% if task.category %}
+                                        &middot; <span class="category-badge">{{ task.get_category_display }}</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-state">No completed tasks yet. Finish a task and it'll show up here, grouped by the day you completed it.</p>
+    {% endif %}
+{% endblock %}

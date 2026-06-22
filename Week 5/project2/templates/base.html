@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}To-Do List{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'tasks/css/style.css' %}">
+    {% if active_theme.css_url %}
+        <link rel="stylesheet" href="{{ active_theme.css_url }}">
+    {% endif %}
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{% url 'task-list' %}">My To-Do List</a>
+        <nav>
+            {% if user.is_authenticated %}
+                <span class="welcome">Hi, {{ user.username }}</span>
+                <span class="points-badge">&#9733; {{ user_points }} pts</span>
+                <a href="{% url 'task-calendar' %}">Calendar</a>
+                <a href="{% url 'task-lists' %}">Lists</a>
+                <a href="{% url 'theme-shop' %}">Shop</a>
+                <a href="{% url 'account-settings' %}">Settings</a>
+                <form action="{% url 'logout' %}" method="post" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="link-button">Log out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Log in</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

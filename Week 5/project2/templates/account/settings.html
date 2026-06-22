@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Account Settings{% endblock %}
+{% block content %}
+    <h1>Account Settings</h1>
+
+    <div class="card-form">
+        <h3>Preferred AI provider</h3>
+        <p class="task-meta">
+            Currently using <strong>{{ profile.get_ai_provider_display }}</strong> for AI quick-add.
+        </p>
+        <form method="post" action="{% url 'account-provider' %}">
+            {% csrf_token %}
+            {{ provider_form.as_p }}
+            <button type="submit" class="btn btn-primary">Switch provider</button>
+        </form>
+    </div>
+
+    <div class="card-form" style="margin-top:16px;">
+        <h3>OpenAI API key</h3>
+
+        <p class="key-status">
+            {% if profile.has_openai_key %}
+                <span class="badge badge-set">Key saved</span>
+                <span class="task-meta">({{ profile.masked_api_key }})</span>
+            {% else %}
+                <span class="badge badge-unset">No key saved</span>
+                <span class="task-meta">Needed if OpenAI is your preferred provider.</span>
+            {% endif %}
+        </p>
+
+        <form method="post" action="{% url 'account-settings' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">
+                {% if profile.has_openai_key %}Update key{% else %}Save key{% endif %}
+            </button>
+        </form>
+
+        {% if profile.has_openai_key %}
+            <form method="post" action="{% url 'account-openai-key-remove' %}" style="margin-top:10px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove key</button>
+            </form>
+        {% endif %}
+
+        <p class="task-meta" style="margin-top:10px;">
+            Get a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com</a>
+            (API keys).
+        </p>
+    </div>
+
+    <div class="card-form" style="margin-top:16px;">
+        <h3>Gemini API key</h3>
+
+        <p class="key-status">
+            {% if profile.has_gemini_key %}
+                <span class="badge badge-set">Key saved</span>
+                <span class="task-meta">({{ profile.masked_gemini_api_key }})</span>
+            {% else %}
+                <span class="badge badge-unset">No key saved</span>
+                <span class="task-meta">Needed if Gemini is your preferred provider.</span>
+            {% endif %}
+        </p>
+
+        <form method="post" action="{% url 'account-gemini-key' %}">
+            {% csrf_token %}
+            {{ gemini_form.as_p }}
+            <button type="submit" class="btn btn-primary">
+                {% if profile.has_gemini_key %}Update key{% else %}Save key{% endif %}
+            </button>
+        </form>
+
+        {% if profile.has_gemini_key %}
+            <form method="post" action="{% url 'account-gemini-key-remove' %}" style="margin-top:10px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove key</button>
+            </form>
+        {% endif %}
+
+        <p class="task-meta" style="margin-top:10px;">
+            Get a key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com</a>
+            (API keys).
+        </p>
+    </div>
+
+    <div class="card-form" style="margin-top:16px;">
+        <h3>Local model</h3>
+
+        <p class="key-status">
+            {% if local_model_available %}
+                <span class="badge badge-set">Ready</span>
+                <span class="task-meta">No API key needed — runs on this machine.</span>
+            {% else %}
+                <span class="badge badge-unset">Not installed</span>
+                <span class="task-meta">Requires the <code>llama-cpp-python</code> package.</span>
+            {% endif %}
+        </p>
+
+        <p class="task-meta">
+            Selecting "Local model" above as your preferred AI provider parses quick-add
+            notes with a model that runs entirely on this machine, instead of calling
+            OpenAI or Gemini — no key, no per-call cost, and your notes never leave the
+            machine. The first quick-add request downloads the default model (about 2GB)
+            and caches it; every request after that is faster but generally slower than
+            the cloud providers, especially without a GPU.
+        </p>
+    </div>
+
+    <p class="task-meta" style="margin-top:16px;">
+        Either API key is stored in this app's database and used only to power your AI quick-add requests --
+        switch providers anytime above without losing either saved key.
+    </p>
+{% endblock %}

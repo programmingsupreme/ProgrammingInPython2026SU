@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Models</title>
+</head>
+<body>
+    <h1>New Models</h1>
+    <ul>
+        {% for new_model in new_models %}
+            <li>{{ new_model.title }} - {{ new_model.description }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

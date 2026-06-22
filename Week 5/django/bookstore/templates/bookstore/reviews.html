@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reviews</title>
+</head>
+<body>
+    <h1>Reviews</h1>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                {{ review.student.name }} rated
+                "{% if review.book %}{{ review.book.title }}{% elif review.video %}{{ review.video.title }}{% else %}Unknown{% endif %}"
+                {{ review.rating }}/5
+                {% if review.comment %} - "{{ review.comment }}"{% endif %}
+                ({{ review.review_date }})
+            </li>
+        {% endfor %}
+    </ul>
+    <p><a href="/">Back to Index</a></p>
+</body>
+</html>

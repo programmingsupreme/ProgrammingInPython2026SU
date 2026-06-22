@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}My Tasks{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h1>My Tasks</h1>
+        <a href="{% url 'task-create' %}" class="btn btn-primary">+ Add Task</a>
+    </div>
+
+    <form action="{% url 'task-quick-add' %}" method="post" class="quick-add-form">
+        {% csrf_token %}
+        <input type="text" name="text" maxlength="500" required
+               placeholder="Try: remind me to call mom tomorrow at 5pm">
+        <button type="submit" class="btn btn-ai">&#10024; Add with AI</button>
+        <span class="info-icon" tabindex="0" role="img"
+              aria-label="What does Add with AI do?"
+              data-tooltip="Type a task in plain English -- e.g. &quot;call mom tomorrow at 5pm&quot; -- and your selected AI provider fills in the title, description, due date, and category for you. If no AI key is set up (or the AI call fails), it just saves your text as a plain task instead.">i</span>
+    </form>
+
+    {% if tasks %}
+        <ul class="task-list">
+            {% for task in tasks %}
+                <li class="task-item {% if task.complete %}complete{% endif %}">
+                    <form action="{% url 'task-toggle' task.pk %}" method="post" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" class="checkbox-btn" aria-label="Toggle complete">
+                            {% if task.complete %}&#9745;{% else %}&#9744;{% endif %}
+                        </button>
+                    </form>
+                    <div class="task-body">
+                        <span class="task-title">{{ task.title }}</span>
+                        {% if task.description %}
+                            <p class="task-description">{{ task.description }}</p>
+                        {% endif %}
+                        <span class="task-meta">
+                            Added {{ task.created|date:"M j, Y" }}
+                            {% if task.due_date %}
+                                &middot; <span class="task-due">Due {{ task.due_date|date:"M j, Y g:i A" }}</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="task-actions">
+                        <a href="{% url 'task-update' task.pk %}">Edit</a>
+                        <a href="{% url 'task-delete' task.pk %}" class="danger-link">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-state">You don't have any tasks yet. Click "Add Task" to create one.</p>
+    {% endif %}
+{% endblock %}

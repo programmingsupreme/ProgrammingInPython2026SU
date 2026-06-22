@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bookstore</title>
+</head>
+<body>
+    <h1>Index Page</h1>
+
+    <h1>Authors</h1>
+    <ul>
+        {% for author in authors %}
+            <li>{{ author.name }} ({{ author.nationality }})</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Books</h1>
+    <ul>
+        {% for book in books %}
+            <li>{{ book.title }} by {{ book.author.name }} - {{ book.genre }} - ${{ book.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Videos</h1>
+    <ul>
+        {% for video in videos %}
+            <li>{{ video.title }} - {{ video.genre }} - ${{ video.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="/reviews/">View Reviews</a></p>
+</body>
+</html>

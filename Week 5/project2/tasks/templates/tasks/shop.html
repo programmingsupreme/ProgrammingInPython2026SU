@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Theme Shop{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h1>Theme Shop</h1>
+    </div>
+
+    <p class="task-meta" style="margin-bottom: 18px;">
+        You earn {{ profile.points|default:0 }} points so far, 10 per task the first time you complete it.
+        Spend them here to unlock a new look for the site. Paid themes are real, free stylesheets fetched
+        live from <a href="https://bootswatch.com" target="_blank" rel="noopener">Bootswatch</a> — nothing
+        about their colors or fonts is hardcoded in this app.
+    </p>
+
+    <div class="shop-grid">
+        {% for theme in shop_items %}
+            <div class="shop-card {% if theme.active %}active{% endif %}">
+                <div class="shop-card-header">
+                    <h2>{{ theme.name }}</h2>
+                    {% if theme.active %}
+                        <span class="badge badge-set">Active</span>
+                    {% elif theme.unlocked %}
+                        <span class="badge badge-set">Unlocked</span>
+                    {% else %}
+                        <span class="badge badge-unset">Locked</span>
+                    {% endif %}
+                </div>
+
+                <p class="task-meta">
+                    {% if theme.cost > 0 %}
+                        Cost: {{ theme.cost }} pts &middot; Source: {{ theme.source_name }}
+                    {% else %}
+                        Always free &middot; Source: {{ theme.source_name }}
+                    {% endif %}
+                </p>
+
+                <form action="{% url 'theme-select' theme.key %}" method="post" class="inline-form">
+                    {% csrf_token %}
+                    {% if theme.active %}
+                        <button type="submit" class="btn btn-secondary" disabled>Active</button>
+                    {% elif theme.unlocked %}
+                        <button type="submit" class="btn btn-primary">Switch to this</button>
+                    {% elif theme.affordable %}
+                        <button type="submit" class="btn btn-primary">Unlock for {{ theme.cost }} pts</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-secondary" disabled>Need {{ theme.cost }} pts</button>
+                    {% endif %}
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Lists{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h1>Task Lists</h1>
+    </div>
+
+    {% if lists %}
+        <p class="task-meta" style="margin-bottom: 18px;">
+            Categories are assigned automatically by AI quick-add, or you can set one yourself from a task's Edit page.
+        </p>
+        {% for group in lists %}
+            <div class="group-section">
+                <div class="group-heading">
+                    <h2>{{ group.label }}</h2>
+                    <span class="group-count">{{ group.tasks|length }} task{{ group.tasks|length|pluralize }}</span>
+                </div>
+                <ul class="task-list">
+                    {% for task in group.tasks %}
+                        <li class="task-item {% if task.complete %}complete{% endif %}">
+                            <form action="{% url 'task-toggle' task.pk %}" method="post" class="inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="checkbox-btn" aria-label="Toggle complete">
+                                    {% if task.complete %}&#9745;{% else %}&#9744;{% endif %}
+                                </button>
+                            </form>
+                            <div class="task-body">
+                                <span class="task-title">{{ task.title }}</span>
+                                {% if task.description %}
+                                    <p class="task-description">{{ task.description }}</p>
+                                {% endif %}
+                                <span class="task-meta">
+                                    Added {{ task.created|date:"M j, Y" }}
+                                    {% if task.due_date %}
+                                        &middot; <span class="task-due">Due {{ task.due_date|date:"M j, Y g:i A" }}</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="task-actions">
+                                <a href="{% url 'task-update' task.pk %}">Edit</a>
+                                <a href="{% url 'task-delete' task.pk %}" class="danger-link">Delete</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-state">You don't have any tasks yet. Click "Add Task" to create one.</p>
+    {% endif %}
+{% endblock %}

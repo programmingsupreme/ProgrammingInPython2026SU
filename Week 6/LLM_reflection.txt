@@ -1,0 +1,19 @@
+# Were the LLMs helpful? A reflection on the Flask activity
+
+Across this activity I used three assistants — ChatGPT, Gemini, and Claude — and each was useful at a different stage. None of them produced perfect, finished code on its own, but together they moved the project forward, and the errors they introduced were as instructive as the code that worked.
+
+## ChatGPT
+
+ChatGPT was the most helpful for getting started. From a single prompt it scaffolded the whole Gryffindor-themed app — the folder structure, `app.py`, `base.html`, `index.html`, and the CSS — and the result actually ran. The trade-off was that this first version stored tasks in a plain Python list, so everything was lost on restart. ChatGPT was also the one that ultimately resolved the hardest bug: when the SQLAlchemy version crashed with a "working outside of application context" error, ChatGPT correctly identified that `db.create_all()` needed to run inside an application context and rewrote the code so it worked. So it was strong at both the initial build and the final fix.
+
+## Gemini
+
+Gemini was most useful as a reviewer rather than a builder. Given the working app, it cleaned up the code — stripping whitespace from input, using `del` for deletion, and adding a "Clear All" route — and it suggested sensible next steps like moving to a real database, adding user accounts, and improving the theme with better fonts and colors. Most of its concrete suggestions were improvements rather than fixes, and its code was still in-memory, so it didn't solve persistence. But as a "second opinion" pass it added polish and pointed in the right direction.
+
+## Claude
+
+Claude was the one that took on persistence, rewriting the app to use Flask-SQLAlchemy and a SQLite database — exactly the feature the project needed. The catch was that its code placed `db.create_all()` at the module level, which is what triggered the application-context error, and when that error appeared Claude's first instinct was to blame the installation (suggesting reinstalling and pinning Flask-SQLAlchemy versions) rather than the actual context problem. So Claude pushed the project to the most important upgrade but introduced the bug that ChatGPT later had to fix.
+
+## Overall
+
+The LLMs were genuinely helpful, but only because they were used together and checked at every step. No single tool delivered correct, persistent, working code in one shot: ChatGPT built and later repaired it, Gemini refined it, and Claude drove the database upgrade while also creating the trickiest error. The biggest lesson is the one the lab itself stresses — follow the suggestions, but understand every step. The assistants were great for generating and improving code quickly, but a person still had to recognize the in-memory limitation, spot the context error, and know which fix was the real one. Used as collaborators rather than as an autopilot, they made the activity faster and more educational.

@@ -1,0 +1,66 @@
+<svg width="680" height="682" viewBox="0 0 680 682" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="680" height="682" fill="#ffffff"/>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#444441" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<g>
+<rect x="270" y="40" width="140" height="56" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.75"/>
+<text x="340" y="63" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C2C2A">Browser</text>
+<text x="340" y="81" text-anchor="middle" font-size="12" fill="#444441">User's web client</text>
+</g>
+
+<line x1="340" y1="96" x2="340" y2="126" stroke="#444441" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<g>
+<rect x="50" y="126" width="580" height="230" rx="20" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.75"/>
+<text x="340" y="163" text-anchor="middle" font-size="14" font-weight="bold" fill="#042C53">Django app</text>
+<text x="340" y="181" text-anchor="middle" font-size="12" fill="#0C447C">todo_project + tasks</text>
+</g>
+
+<g>
+<rect x="74" y="196" width="256" height="130" rx="12" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.75"/>
+<text x="202" y="233" text-anchor="middle" font-size="14" font-weight="bold" fill="#04342C">Views, forms &amp; templates</text>
+<text x="202" y="251" text-anchor="middle" font-size="12" fill="#085041">Handles requests, renders pages</text>
+</g>
+
+<g>
+<rect x="350" y="196" width="256" height="130" rx="12" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.75"/>
+<text x="478" y="233" text-anchor="middle" font-size="14" font-weight="bold" fill="#412402">Models (ORM)</text>
+<text x="478" y="251" text-anchor="middle" font-size="12" fill="#633806">Task, Profile, User</text>
+</g>
+
+<line x1="330" y1="261" x2="350" y2="261" stroke="#444441" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<line x1="478" y1="326" x2="478" y2="396" stroke="#444441" stroke-width="1.5" marker-end="url(#arrow)"/>
+<g>
+<rect x="398" y="396" width="160" height="56" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.75"/>
+<text x="478" y="419" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C2C2A">SQLite database</text>
+<text x="478" y="437" text-anchor="middle" font-size="12" fill="#444441">db.sqlite3</text>
+</g>
+
+<line x1="340" y1="356" x2="340" y2="492" stroke="#444441" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<g>
+<rect x="50" y="492" width="580" height="160" rx="20" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.75"/>
+<text x="340" y="529" text-anchor="middle" font-size="14" font-weight="bold" fill="#04342C">External services</text>
+<text x="340" y="547" text-anchor="middle" font-size="12" fill="#085041">Third-party integrations</text>
+</g>
+
+<g>
+<rect x="74" y="562" width="164" height="70" rx="10" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.75"/>
+<text x="156" y="589" text-anchor="middle" font-size="14" font-weight="bold" fill="#412402">AI providers</text>
+<text x="156" y="611" text-anchor="middle" font-size="12" fill="#633806">Quick-add parsing</text>
+</g>
+<g>
+<rect x="258" y="562" width="164" height="70" rx="10" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.75"/>
+<text x="340" y="589" text-anchor="middle" font-size="14" font-weight="bold" fill="#412402">Google sign-in</text>
+<text x="340" y="611" text-anchor="middle" font-size="12" fill="#633806">via allauth</text>
+</g>
+<g>
+<rect x="442" y="562" width="164" height="70" rx="10" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.75"/>
+<text x="524" y="589" text-anchor="middle" font-size="14" font-weight="bold" fill="#412402">Email &amp; CDN</text>
+<text x="524" y="611" text-anchor="middle" font-size="12" fill="#633806">Reset + themes</text>
+</g>
+
+</svg>
